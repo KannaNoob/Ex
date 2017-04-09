@@ -7,11 +7,20 @@ using System.Linq;
 
 public class HandlingEvents : MonoBehaviour {
 
+    public AudioSource Click_Sounds;
+    public AudioClip Yes, Maybe, No , npc_fish,npc_polo,npc_build,npc_farm;
+    public AudioClip ali, mant, tree, hy;
+         
     public Sprite Initial; //Drag your first sprite here in inspector.
     public Sprite Second; //Drag your second sprite here in inspector.
 
     public Texture Farmer;
     public Texture Fisherman;
+
+    public Texture Info_Ali, Info_Mana, Info_Orange, Info_WaterHy;
+
+    public GameObject Win_Screen;
+    public GameObject Lose_Screen;
 
     // The button sprites for press down and push up
     public Sprite Many_up;
@@ -47,7 +56,7 @@ public class HandlingEvents : MonoBehaviour {
 
     int[] Sprite_Count = new int[Max_Events];
 
-    public float Chaos = 0.0f;   // Used to determine How well/bad the city is doing.
+    public int Chaos = 0;   // Used to determine How well/bad the city is doing.
     
 
 
@@ -101,14 +110,22 @@ public class HandlingEvents : MonoBehaviour {
         }
 
         for (int j = 0; j < Max_Events; j++)
+        {
+
+            if (j == 0) Click_Sounds.clip = ali;
+            else if (j == 1) Click_Sounds.clip = hy;
+            else if (j == 2) Click_Sounds.clip = mant;
+            else if (j == 3) Click_Sounds.clip = tree;
+
+
             for (int i = 0; i < Sprite_Count[j]; i++)
-            {
-                Water_Dummy[i + (j * 10)].SetActive(true);
-                yield return new WaitForSeconds(0.3f);
+                {
+                    Water_Dummy[i + (j * 10)].SetActive(true);
+                    Click_Sounds.Play();
+                    yield return new WaitForSeconds(0.3f);
 
-
-            }
-
+                }
+        }
     }
 
     void select_event()  // To decide which event to run
@@ -125,29 +142,47 @@ public class HandlingEvents : MonoBehaviour {
 
         turncount++;
 
-        
+        for (int i = 0; i < Max_Events; i++)
+            if (Sprite_Count[i] > 5) Chaos++;
+
         switch (currentEvent)
         {
 
             case 1:                 // Crocodiles
 
                 GameObject.FindWithTag("TextBox").GetComponent<Text>().text = "Hello, Mayor! The government wants to give money to the city that preserves the most alligators, and I want to pass a bill to bring more here. Can I get your support? "; // Enter Details On Crocs
-                GameObject.FindWithTag("Hero").GetComponent<RawImage>().texture = Fisherman;                
+                GameObject.FindWithTag("Hero").GetComponent<RawImage>().texture = Fisherman;
+                InfoBox.GetComponent<RawImage>().texture = Info_Ali;
+                Click_Sounds.clip = npc_polo;
+                Click_Sounds.Play();
+
                 break;
 
             case 0:                 //Water Hyacint
                 GameObject.FindWithTag("TextBox").GetComponent<Text>().text = " Greetings! I’m a developer here in Lakeville, and I want to bring a new plant here to attract tourists with a pretty scenery.  Water Hyacinth are beautiful, and I’ve heard Manatees love to eat them, so what do you say?";          // Enter Details On Water hydrants
                 GameObject.FindWithTag("Hero").GetComponent<RawImage>().texture = Fisherman;
+                InfoBox.GetComponent<RawImage>().texture = Info_WaterHy;
+                Click_Sounds.clip = npc_build;
+                Click_Sounds.Play();
+
                 break;
 
             case 2:                 //Manatees
                 GameObject.FindWithTag("TextBox").GetComponent<Text>().text = " Good afternoon, Mayor!  Manatees are endangered and need our help.  If you help us rescue more Manatees, the town’s citizens will be extremely grateful.  Plus, they’ll help eat any pesky invasive plants, like Water Hyacinth.  Will you help us out? ";          // Enter Details On Manatees
                 GameObject.FindWithTag("Hero").GetComponent<RawImage>().texture = Farmer;
+                InfoBox.GetComponent<RawImage>().texture = Info_Mana;
+                Click_Sounds.clip = npc_fish;
+                Click_Sounds.Play();
+
                 break;
 
             case 3:                 //Orange Trees
                 GameObject.FindWithTag("TextBox").GetComponent<Text>().text = " Hey Mayor, my other crops haven’t been selling as well this year. if we could import some more Orange Trees to our city, the citizens would appreciate it, Lakeville would certainly profit, and I might be able to survive the rest of the year after all.  So, how about it?";          // Enter Details On Whatever
                 GameObject.FindWithTag("Hero").GetComponent<RawImage>().texture = Farmer;
+                InfoBox.GetComponent<RawImage>().texture = Info_Orange;
+                Click_Sounds.clip = npc_farm;
+                Click_Sounds.Play();
+
                 break;
 
         }
@@ -158,11 +193,18 @@ public class HandlingEvents : MonoBehaviour {
         if (debugflag) debugflag = false;
         else debugflag = true;
 
-       // if (turncount > 10)             // End Game Box to be added
-       // {
+        if (turncount > 9)             // End Game Box to be added
+        {
+
+            Text_Dummy.SetActive(false);
+            Text_Button_Dummy.SetActive(false);
+            Text_UI.SetActive(false);
+            if (Chaos < 10)
+                Win_Screen.SetActive(true);
+            else Lose_Screen.SetActive(true);
 
 
-       // }
+        }
 
     }
 
@@ -184,6 +226,8 @@ public class HandlingEvents : MonoBehaviour {
     void Start() {
 
         turncount = 0;
+        Win_Screen.SetActive(false);
+        Lose_Screen.SetActive(false);
         InfoBox = GameObject.FindWithTag("Info");
         InfoBox.SetActive(false);
         Water_Dummy = FindGameObjectsWithTags(new string[]{"Croc", "WaterPlant", "Manatee", "Orange"});
@@ -234,7 +278,8 @@ public class HandlingEvents : MonoBehaviour {
                 if(hit.collider.tag.Contains("OptionA"))                // Best Case for Advisor
                 {
                     StartCoroutine(button());
-
+                    Click_Sounds.clip = Yes;
+                    Click_Sounds.Play();
                     /*
                             GameObject.FindWithTag("TextBox").SetActive(false);
                             GameObject.FindWithTag("ButtonClose").SetActive(false);
@@ -248,8 +293,10 @@ public class HandlingEvents : MonoBehaviour {
                 }
                 if (hit.collider.tag.Contains("OptionB"))               // Balanced approach 
                 {
-                    
+                
                     StartCoroutine(button1());
+                    Click_Sounds.clip = Maybe;
+                    Click_Sounds.Play();
                     /*
                     GameObject.FindWithTag("TextBox").SetActive(false);
                     GameObject.FindWithTag("ButtonClose").SetActive(false);
@@ -265,6 +312,8 @@ public class HandlingEvents : MonoBehaviour {
                 {
 
                     StartCoroutine(button2());
+                    Click_Sounds.clip = No;
+                    Click_Sounds.Play();
                     /*GameObject.FindWithTag("TextBox").SetActive(false);
                     GameObject.FindWithTag("ButtonClose").SetActive(false);
                     Text_UI.SetActive(false);
