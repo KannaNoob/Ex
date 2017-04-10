@@ -16,6 +16,8 @@ public class HandlingEvents : MonoBehaviour {
 
     public Texture Farmer;
     public Texture Fisherman;
+    public Texture Poli;
+    public Texture Nature;
 
     public Texture Info_Ali, Info_Mana, Info_Orange, Info_WaterHy;
 
@@ -103,6 +105,8 @@ public class HandlingEvents : MonoBehaviour {
 
     IEnumerator waiting()               // Popping up all the sprites
     {
+
+        GameObject.FindWithTag("Background").GetComponent<Image>().sprite = Second;
         foreach (GameObject Water in Water_Dummy)
         {
             Water.SetActive(false);
@@ -126,6 +130,7 @@ public class HandlingEvents : MonoBehaviour {
 
                 }
         }
+        GameObject.FindWithTag("Background").GetComponent<Image>().sprite = Initial;
     }
 
     void select_event()  // To decide which event to run
@@ -148,19 +153,19 @@ public class HandlingEvents : MonoBehaviour {
         switch (currentEvent)
         {
 
-            case 1:                 // Crocodiles
+            case 0:                 // Crocodiles
 
                 GameObject.FindWithTag("TextBox").GetComponent<Text>().text = "Hello, Mayor! The government wants to give money to the city that preserves the most alligators, and I want to pass a bill to bring more here. Can I get your support? "; // Enter Details On Crocs
-                GameObject.FindWithTag("Hero").GetComponent<RawImage>().texture = Fisherman;
+                GameObject.FindWithTag("Hero").GetComponent<RawImage>().texture = Poli;
                 InfoBox.GetComponent<RawImage>().texture = Info_Ali;
                 Click_Sounds.clip = npc_polo;
                 Click_Sounds.Play();
 
                 break;
 
-            case 0:                 //Water Hyacint
+            case 1:                 //Water Hyacint
                 GameObject.FindWithTag("TextBox").GetComponent<Text>().text = " Greetings! I’m a developer here in Lakeville, and I want to bring a new plant here to attract tourists with a pretty scenery.  Water Hyacinth are beautiful, and I’ve heard Manatees love to eat them, so what do you say?";          // Enter Details On Water hydrants
-                GameObject.FindWithTag("Hero").GetComponent<RawImage>().texture = Fisherman;
+                GameObject.FindWithTag("Hero").GetComponent<RawImage>().texture = Nature;
                 InfoBox.GetComponent<RawImage>().texture = Info_WaterHy;
                 Click_Sounds.clip = npc_build;
                 Click_Sounds.Play();
@@ -169,7 +174,7 @@ public class HandlingEvents : MonoBehaviour {
 
             case 2:                 //Manatees
                 GameObject.FindWithTag("TextBox").GetComponent<Text>().text = " Good afternoon, Mayor!  Manatees are endangered and need our help.  If you help us rescue more Manatees, the town’s citizens will be extremely grateful.  Plus, they’ll help eat any pesky invasive plants, like Water Hyacinth.  Will you help us out? ";          // Enter Details On Manatees
-                GameObject.FindWithTag("Hero").GetComponent<RawImage>().texture = Farmer;
+                GameObject.FindWithTag("Hero").GetComponent<RawImage>().texture = Fisherman;
                 InfoBox.GetComponent<RawImage>().texture = Info_Mana;
                 Click_Sounds.clip = npc_fish;
                 Click_Sounds.Play();

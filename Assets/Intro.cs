@@ -15,7 +15,7 @@ public class Intro : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
+        EnableInstructions.SetActive(false);
     }
 
     // Update is called once per frame
