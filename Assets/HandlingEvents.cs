@@ -10,6 +10,7 @@ public class HandlingEvents : MonoBehaviour {
     public AudioSource Click_Sounds;
     public AudioClip Yes, Maybe, No , npc_fish,npc_polo,npc_build,npc_farm;
     public AudioClip ali, mant, tree, hy;
+    public AudioClip Reward, Penalty;
          
     public Sprite Initial; //Drag your first sprite here in inspector.
     public Sprite Second; //Drag your second sprite here in inspector.
@@ -217,17 +218,25 @@ public class HandlingEvents : MonoBehaviour {
             Text_Button_Dummy.SetActive(false);
             Text_UI.SetActive(false);
             if (Chaos < 10)
+            {
+                Click_Sounds.clip = Reward;
+                Click_Sounds.Play();
                 Win_Screen.SetActive(true);
-            else {
+            }
+            else
+            {
 
-                if (Sprite_Count[0] > 6) Lose_text.GetComponent<Text>().text += "Too many aligators! Get some Orange Trees next time";
+                Click_Sounds.clip = Penalty;
+                Click_Sounds.Play();
+
+                if (Sprite_Count[0] > 6) Lose_text.GetComponent<Text>().text += "Too many alligators! Get some Orange Trees next time";
                 if (Sprite_Count[1] > 6) Lose_text.GetComponent<Text>().text += "Too many Water Hycants ! Get some Manatees next time";
-                if (Sprite_Count[2] > 6) Lose_text.GetComponent<Text>().text += "Too many Manatees! Get some Aligators Trees next time";
+                if (Sprite_Count[2] > 6) Lose_text.GetComponent<Text>().text += "Too many Manatees! Get some Alligators Trees next time";
                 if (Sprite_Count[3] > 6) Lose_text.GetComponent<Text>().text += "Too many Orange trees! Get some Water Hycants next time";
 
                 Lose_Screen.SetActive(true);
 
-                 }
+            }
 
 
         }
