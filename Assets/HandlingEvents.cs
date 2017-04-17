@@ -23,6 +23,7 @@ public class HandlingEvents : MonoBehaviour {
 
     public GameObject Win_Screen;
     public GameObject Lose_Screen;
+    public GameObject Lose_text;
 
     // The button sprites for press down and push up
     public Sprite Many_up;
@@ -31,12 +32,16 @@ public class HandlingEvents : MonoBehaviour {
     public Sprite some_Down;
     public Sprite less_up;
     public Sprite less_Down;
+    public Sprite Next_Up;
+    public Sprite Next_down;
+
 
     // The 3 buttons for Options
 
     public GameObject Many;
     public GameObject Some;
     public GameObject Less;
+    public GameObject Next_Turn;
 
     public bool nextTurn = false;       // Flag check for next turn.
     /*public bool WaterHy = false;
@@ -63,6 +68,13 @@ public class HandlingEvents : MonoBehaviour {
 
 
     int Cash_In_Hand = 10000;
+
+    IEnumerator Next_Pop()
+    {
+        Next_Turn.GetComponent<Image>().sprite = Next_down;
+        yield return new WaitForSeconds(0.3f);
+        Next_Turn.GetComponent<Image>().sprite = Next_Up;
+    }
 
     IEnumerator button()
     {
@@ -155,7 +167,7 @@ public class HandlingEvents : MonoBehaviour {
 
             case 0:                 // Crocodiles
 
-                GameObject.FindWithTag("TextBox").GetComponent<Text>().text = "Hello, Mayor! The government wants to give money to the city that preserves the most alligators, and I want to pass a bill to bring more here. Can I get your support? "; // Enter Details On Crocs
+                GameObject.FindWithTag("TextBox").GetComponent<Text>().text = "Hello, Mayor! The government wants to give money to the city that preserves the most <color=#ff5400>alligators</color>, and I want to pass a bill to bring more here. Can I get your support? "; // Enter Details On Crocs
                 GameObject.FindWithTag("Hero").GetComponent<RawImage>().texture = Poli;
                 InfoBox.GetComponent<RawImage>().texture = Info_Ali;
                 Click_Sounds.clip = npc_polo;
@@ -164,7 +176,7 @@ public class HandlingEvents : MonoBehaviour {
                 break;
 
             case 1:                 //Water Hyacint
-                GameObject.FindWithTag("TextBox").GetComponent<Text>().text = " Greetings! I’m a developer here in Lakeville, and I want to bring a new plant here to attract tourists with a pretty scenery.  Water Hyacinth are beautiful, and I’ve heard Manatees love to eat them, so what do you say?";          // Enter Details On Water hydrants
+                GameObject.FindWithTag("TextBox").GetComponent<Text>().text = " Greetings! I’m a developer here in Lakeville, and I want to bring a new plant here to attract tourists with a pretty scenery. <color=#ff5400> Water Hyacinth</color> are beautiful, and I’ve heard Manatees love to eat them, so what do you say?";          // Enter Details On Water hydrants
                 GameObject.FindWithTag("Hero").GetComponent<RawImage>().texture = Nature;
                 InfoBox.GetComponent<RawImage>().texture = Info_WaterHy;
                 Click_Sounds.clip = npc_build;
@@ -173,7 +185,7 @@ public class HandlingEvents : MonoBehaviour {
                 break;
 
             case 2:                 //Manatees
-                GameObject.FindWithTag("TextBox").GetComponent<Text>().text = " Good afternoon, Mayor!  Manatees are endangered and need our help.  If you help us rescue more Manatees, the town’s citizens will be extremely grateful.  Plus, they’ll help eat any pesky invasive plants, like Water Hyacinth.  Will you help us out? ";          // Enter Details On Manatees
+                GameObject.FindWithTag("TextBox").GetComponent<Text>().text = " Good afternoon, Mayor! <color=#ff5400> Manatees</color> are endangered and need our help.  If you help us rescue more Manatees, the town’s citizens will be extremely grateful.  Plus, they’ll help eat any pesky invasive plants, like Water Hyacinth.  Will you help us out? ";          // Enter Details On Manatees
                 GameObject.FindWithTag("Hero").GetComponent<RawImage>().texture = Fisherman;
                 InfoBox.GetComponent<RawImage>().texture = Info_Mana;
                 Click_Sounds.clip = npc_fish;
@@ -182,7 +194,7 @@ public class HandlingEvents : MonoBehaviour {
                 break;
 
             case 3:                 //Orange Trees
-                GameObject.FindWithTag("TextBox").GetComponent<Text>().text = " Hey Mayor, my other crops haven’t been selling as well this year. if we could import some more Orange Trees to our city, the citizens would appreciate it, Lakeville would certainly profit, and I might be able to survive the rest of the year after all.  So, how about it?";          // Enter Details On Whatever
+                GameObject.FindWithTag("TextBox").GetComponent<Text>().text = " Hey Mayor, my other crops haven’t been selling as well this year. if we could import some more <color=#ff5400>Orange Trees</color> to our city, the citizens would appreciate it, Lakeville would certainly profit, and I might be able to survive the rest of the year after all.  So, how about it?";          // Enter Details On Whatever
                 GameObject.FindWithTag("Hero").GetComponent<RawImage>().texture = Farmer;
                 InfoBox.GetComponent<RawImage>().texture = Info_Orange;
                 Click_Sounds.clip = npc_farm;
@@ -206,7 +218,16 @@ public class HandlingEvents : MonoBehaviour {
             Text_UI.SetActive(false);
             if (Chaos < 10)
                 Win_Screen.SetActive(true);
-            else Lose_Screen.SetActive(true);
+            else {
+
+                if (Sprite_Count[0] > 6) Lose_text.GetComponent<Text>().text += "Too many aligators! Get some Orange Trees next time";
+                if (Sprite_Count[1] > 6) Lose_text.GetComponent<Text>().text += "Too many Water Hycants ! Get some Manatees next time";
+                if (Sprite_Count[2] > 6) Lose_text.GetComponent<Text>().text += "Too many Manatees! Get some Aligators Trees next time";
+                if (Sprite_Count[3] > 6) Lose_text.GetComponent<Text>().text += "Too many Orange trees! Get some Water Hycants next time";
+
+                Lose_Screen.SetActive(true);
+
+                 }
 
 
         }
@@ -340,7 +361,7 @@ public class HandlingEvents : MonoBehaviour {
                 if (hit.collider.tag.Contains("NextTurn") && nextTurn)      // Make the Major Gameplay Changes
                 {
 
-                    
+                    StartCoroutine(Next_Pop());
 
                     // Species Rock Paper Scissors here                                     0 = Aligator , 1 =WaterHY 2=Manatee 3 = Orange tree
 
